@@ -6,6 +6,17 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
+	"lint-staged": {
+		"*.js": [
+			"standard --fix",
+			"git add"
+		]
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/frasnym/Clean-Architecture-NodeJS.git"
@@ -20,5 +31,10 @@
 	"bugs": {
 		"url": "https://github.com/frasnym/Clean-Architecture-NodeJS/issues"
 	},
-	"homepage": "https://github.com/frasnym/Clean-Architecture-NodeJS#readme"
+	"homepage": "https://github.com/frasnym/Clean-Architecture-NodeJS#readme",
+	"devDependencies": {
+		"husky": "^4.3.7",
+		"lint-staged": "^10.5.3",
+		"standard": "^16.0.3"
+	}
 }
