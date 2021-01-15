@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "jest --watchAll",
-		"test:stagged": "jest"
+		"test:stagged": "jest --passWithNoTests"
 	},
 	"standard": {
 		"env": [
