@@ -4,8 +4,9 @@
 	"description": "Clean Architecture with NodeJS",
 	"main": "index.js",
 	"scripts": {
-		"test": "jest --watchAll",
-		"test:stagged": "jest --passWithNoTests"
+		"test": "jest --watchAll --silent --colors --noStackTrace",
+		"test:stagged": "jest --passWithNoTests --findRelatedTests --silent --noStackTrace",
+		"test:ci": "jest --coverage"
 	},
 	"standard": {
 		"env": [
