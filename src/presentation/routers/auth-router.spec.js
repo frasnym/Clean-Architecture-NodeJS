@@ -98,7 +98,7 @@ describe('Auth Router', () => {
   })
 
   test('should return 200 when valid credentials are provided', () => {
-    const { authRouter } = makeAuthRouter()
+    const { authRouter, authUseCase } = makeAuthRouter()
 
     const httpRequest = {
       body: {
@@ -109,6 +109,7 @@ describe('Auth Router', () => {
 
     const httpResponse = authRouter.route(httpRequest)
     expect(httpResponse.statusCode).toBe(200)
+    expect(httpResponse.body.accessToken).toEqual(authUseCase.accessToken)
   })
 
   test('should return 500 if no AuthUseCase is provided', () => {
