@@ -7,10 +7,13 @@ const makeAuthRouter = () => {
     auth (email, password) {
       this.email = email
       this.password = password
+
+      return this.accessToken
     }
   }
 
   const authUseCase = new AuthUseCase()
+  authUseCase.accessToken = 'valid_token'
   const authRouter = new AuthRouter(authUseCase)
   return {
     authUseCase,
@@ -79,7 +82,8 @@ describe('Auth Router', () => {
   })
 
   test('should return 401 when invalid credentials are provided', () => {
-    const { authRouter } = makeAuthRouter()
+    const { authRouter, authUseCase } = makeAuthRouter()
+    authUseCase.accessToken = null
 
     const httpRequest = {
       body: {
@@ -91,6 +95,20 @@ describe('Auth Router', () => {
     const httpResponse = authRouter.route(httpRequest)
     expect(httpResponse.statusCode).toBe(401)
     expect(httpResponse.body).toEqual(new UnauthorizedError())
+  })
+
+  test('should return 200 when valid credentials are provided', () => {
+    const { authRouter } = makeAuthRouter()
+
+    const httpRequest = {
+      body: {
+        email: 'valid_email@mail.com',
+        password: 'valid_password'
+      }
+    }
+
+    const httpResponse = authRouter.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(200)
   })
 
   test('should return 500 if no AuthUseCase is provided', () => {
