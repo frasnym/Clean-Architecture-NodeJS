@@ -28,7 +28,6 @@ module.exports = class AuthRouter {
 
       return HttpResponse.ok({ accessToken })
     } catch (e) {
-      console.error(e.message)
       return HttpResponse.serverError()
     }
   }

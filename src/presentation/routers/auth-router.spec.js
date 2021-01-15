@@ -207,4 +207,32 @@ describe('Auth Router', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
   })
+
+  test('should return 500 if no EmailValidator is provided', async () => {
+    const authUseCase = makeAuthUseCase()
+    const authRouter = new AuthRouter(authUseCase)
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    const httpResponse = await authRouter.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+  })
+
+  test('should return 500 if EmailValidator has no isValid method', async () => {
+    const authUseCase = makeAuthUseCase()
+    const authRouter = new AuthRouter(authUseCase, {})
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    const httpResponse = await authRouter.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+  })
 })
