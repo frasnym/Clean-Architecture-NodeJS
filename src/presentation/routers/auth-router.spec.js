@@ -1,8 +1,19 @@
 const AuthRouter = require('./auth-router')
 const MissingParamError = require('../helpers/missing-param-error')
 const UnauthorizedError = require('../helpers/unauthorized-error')
+const ServerError = require('../helpers/server-error')
 
 const makeAuthRouter = () => {
+  const authUseCase = makeAuthUseCase()
+  authUseCase.accessToken = 'valid_token'
+  const authRouter = new AuthRouter(authUseCase)
+  return {
+    authUseCase,
+    authRouter
+  }
+}
+
+const makeAuthUseCase = () => {
   class AuthUseCase {
     auth (email, password) {
       this.email = email
@@ -12,13 +23,17 @@ const makeAuthRouter = () => {
     }
   }
 
-  const authUseCase = new AuthUseCase()
-  authUseCase.accessToken = 'valid_token'
-  const authRouter = new AuthRouter(authUseCase)
-  return {
-    authUseCase,
-    authRouter
+  return new AuthUseCase()
+}
+
+const makeAuthUseCaseWithError = () => {
+  class AuthUseCase {
+    auth () {
+      throw new Error()
+    }
   }
+
+  return new AuthUseCase()
 }
 
 describe('Auth Router', () => {
@@ -55,6 +70,7 @@ describe('Auth Router', () => {
 
     const httpResponse = authRouter.route()
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('should return 500 if httpRequest has no body', () => {
@@ -64,6 +80,7 @@ describe('Auth Router', () => {
 
     const httpResponse = authRouter.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('should call AuthUseCase with correct params', () => {
@@ -124,6 +141,7 @@ describe('Auth Router', () => {
 
     const httpResponse = authRouter.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 
   test('should return 500 if AuthUseCase has no auth() method', () => {
@@ -141,5 +159,21 @@ describe('Auth Router', () => {
 
     const httpResponse = authRouter.route(httpRequest)
     expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('should return 500 if AuthUseCase throws', () => {
+    const authUseCase = makeAuthUseCaseWithError()
+    const authRouter = new AuthRouter(authUseCase)
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+
+    const httpResponse = authRouter.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 })
