@@ -1,40 +1,41 @@
 {
-	"name": "clean-architecture-nodejs",
-	"version": "1.0.0",
-	"description": "Clean Architecture with NodeJS",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"lint-staged": {
-		"*.js": [
-			"standard --fix",
-			"git add"
-		]
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged"
-		}
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/frasnym/Clean-Architecture-NodeJS.git"
-	},
-	"keywords": [
-		"clean",
-		"architecture",
-		"node"
-	],
-	"author": "FrasNym",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/frasnym/Clean-Architecture-NodeJS/issues"
-	},
-	"homepage": "https://github.com/frasnym/Clean-Architecture-NodeJS#readme",
-	"devDependencies": {
-		"husky": "^4.3.7",
-		"lint-staged": "^10.5.3",
-		"standard": "^16.0.3"
-	}
+  "name": "clean-architecture-nodejs",
+  "version": "1.0.0",
+  "description": "Clean Architecture with NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "lint-staged": {
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frasnym/Clean-Architecture-NodeJS.git"
+  },
+  "keywords": [
+    "clean",
+    "architecture",
+    "node"
+  ],
+  "author": "FrasNym",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/frasnym/Clean-Architecture-NodeJS/issues"
+  },
+  "homepage": "https://github.com/frasnym/Clean-Architecture-NodeJS#readme",
+  "devDependencies": {
+    "husky": "^4.3.7",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.3",
+    "standard": "^16.0.3"
+  }
 }
