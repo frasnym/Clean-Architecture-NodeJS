@@ -76,4 +76,18 @@ describe('Auth Router', () => {
     expect(authUseCase.email).toBe(httpRequest.body.email)
     expect(authUseCase.password).toBe(httpRequest.body.password)
   })
+
+  test('should return 401 when invalid credentials are provided', () => {
+    const { authRouter } = makeAuthRouter()
+
+    const httpRequest = {
+      body: {
+        email: 'invalid_email@mail.com',
+        password: 'invalid_password'
+      }
+    }
+
+    const httpResponse = authRouter.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(401)
+  })
 })
