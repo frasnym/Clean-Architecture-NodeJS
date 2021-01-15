@@ -2,12 +2,24 @@ const AuthRouter = require('./auth-router')
 const MissingParamError = require('../helpers/missing-param-error')
 
 const makeAuthRouter = () => {
-  return new AuthRouter()
+  class AuthUseCase {
+    auth (email, password) {
+      this.email = email
+      this.password = password
+    }
+  }
+
+  const authUseCase = new AuthUseCase()
+  const authRouter = new AuthRouter(authUseCase)
+  return {
+    authUseCase,
+    authRouter
+  }
 }
 
 describe('Auth Router', () => {
   test('should return 400 if no email is provided', () => {
-    const authRouter = makeAuthRouter()
+    const { authRouter } = makeAuthRouter()
 
     const httpRequest = {
       body: {
@@ -21,7 +33,7 @@ describe('Auth Router', () => {
   })
 
   test('should return 400 if no password is provided', () => {
-    const authRouter = makeAuthRouter()
+    const { authRouter } = makeAuthRouter()
 
     const httpRequest = {
       body: {
@@ -35,14 +47,14 @@ describe('Auth Router', () => {
   })
 
   test('should return 500 if no httpRequest is provided', () => {
-    const authRouter = makeAuthRouter()
+    const { authRouter } = makeAuthRouter()
 
     const httpResponse = authRouter.route()
     expect(httpResponse.statusCode).toBe(500)
   })
 
   test('should return 500 if httpRequest has no body', () => {
-    const authRouter = makeAuthRouter()
+    const { authRouter } = makeAuthRouter()
 
     const httpRequest = {}
 
@@ -51,9 +63,17 @@ describe('Auth Router', () => {
   })
 
   test('should call AuthUseCase with correct params', () => {
-    const authRouter = makeAuthRouter()
+    const { authRouter, authUseCase } = makeAuthRouter()
 
-    const httpResponse = authRouter.route({})
-    expect(httpResponse.statusCode).toBe(500)
+    const httpRequest = {
+      body: {
+        email: 'any@email.com',
+        password: 'any_password'
+      }
+    }
+
+    authRouter.route(httpRequest)
+    expect(authUseCase.email).toBe(httpRequest.body.email)
+    expect(authUseCase.password).toBe(httpRequest.body.password)
   })
 })
