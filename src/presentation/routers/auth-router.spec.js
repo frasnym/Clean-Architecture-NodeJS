@@ -1,5 +1,6 @@
 const AuthRouter = require('./auth-router')
 const MissingParamError = require('../helpers/missing-param-error')
+const UnauthorizedError = require('../helpers/unauthorized-error')
 
 const makeAuthRouter = () => {
   class AuthUseCase {
@@ -89,5 +90,6 @@ describe('Auth Router', () => {
 
     const httpResponse = authRouter.route(httpRequest)
     expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
   })
 })
